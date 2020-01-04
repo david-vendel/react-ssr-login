@@ -1,4 +1,4 @@
-const path = requite("path");
+const path = require("path");
 const webpackNodeExternals = require("webpack-node-externals");
 
 module.exports = {
@@ -12,7 +12,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\,js$/,
+        test: /\.js$/,
         loader: "babel-loader",
         exclude: "/node_modules/",
         options: {
