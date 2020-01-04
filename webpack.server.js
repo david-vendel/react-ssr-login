@@ -10,6 +10,7 @@ module.exports = {
     publicPath: "/build"
   },
   mode: "production",
+
   module: {
     rules: [
       {
@@ -18,14 +19,8 @@ module.exports = {
         exclude: "/node_modules/",
         options: {
           presets: [
-            "react",
-            "stage-0",
-            [
-              "env",
-              {
-                target: { browsers: ["last 2 versions"] }
-              }
-            ]
+            "@babel/preset-react",
+            ["@babel/env", { targets: { browsers: ["last 2 versions"] } }]
           ]
         }
       }
