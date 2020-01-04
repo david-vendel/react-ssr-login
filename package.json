@@ -9,7 +9,8 @@
     "webpack:client": "webpack --config webpack.client.js --watch",
     "webpack:server": "webpack --config webpack.server.js --watch",
     "webpack:start": "nodemon --watch build --exec node build/bundle.js",
-    "dev": "npm-run-all --parallel webpack:*"
+    "dev": "npm-run-all --parallel webpack:*",
+    "build": "webpack --config webpack.client.js && webpack --config webpack.server.js"
   },
   "dependencies": {
     "babel-cli": "6.26.0",
@@ -27,6 +28,7 @@
     "npm-run-all": "4.1.3",
     "react": "16.4.2",
     "react-dom": "16.4.2",
+    "react-helmet": "^5.2.1",
     "react-router": "4.3.1",
     "react-router-dom": "4.3.1",
     "webpack": "4.16.5",
