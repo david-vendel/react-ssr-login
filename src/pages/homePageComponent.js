@@ -10,7 +10,7 @@ class Home extends React.Component {
       <div>
         <h1>My home page</h1>
         <p>Some content..</p>
-        <button onClick={() => console.log("xxx")}>Console log</button>
+        <button onClick={() => this.exampleMethod()}>Console log</button>
       </div>
     );
   }
