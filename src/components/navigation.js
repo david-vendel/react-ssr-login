@@ -27,6 +27,9 @@ export default class Navigation extends React.Component {
             <Nav.Link href="/">Active</Nav.Link>
           </Nav.Item>
           <Nav.Item>
+            <Nav.Link href="/list">List</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
             <Nav.Link href="/register">Register</Nav.Link>
           </Nav.Item>
           <Nav.Item>

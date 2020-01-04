@@ -1,6 +1,7 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 import Navigation from "../components/navigation";
+import axios from "axios";
 
 import {
   Container,
@@ -20,24 +21,23 @@ import {
 } from "react-bootstrap";
 
 const page = {
-  title: "Login",
-  url: "login"
+  title: "List",
+  url: "list"
 };
 
-class Login extends React.Component {
-  exampleMethod() {
-    console.log("JS is running:", JSON.parse(document.cookie).authorization);
-  }
-  setCookie() {
-    document.cookie = "cookie set";
-  }
-
+class List extends React.Component {
   head() {
     return (
       <Helmet>
         <title>{page.title}</title>
       </Helmet>
     );
+  }
+  componentDidMount() {
+    console.log("cdm");
+    axios.get("https://test-api.inizio.cz/api/products").then(response => {
+      console.log("response", response);
+    });
   }
 
   render() {
@@ -48,14 +48,12 @@ class Login extends React.Component {
         <Container>
           <Navigation url={page.url} />
 
-          <h1>Login</h1>
-          <p>login..</p>
-          <Button onClick={() => this.exampleMethod()}>Console LLog</Button>
-          <Button onClick={() => this.setCookie()}>Cookie set</Button>
+          <h1>List</h1>
+          <p>list..</p>
         </Container>
       </div>
     );
   }
 }
 
-export default Login;
+export default List;
