@@ -25,10 +25,6 @@ const page = {
 };
 
 class Home extends React.Component {
-  exampleMethod() {
-    console.log("JS is running");
-  }
-
   head() {
     return (
       <Helmet>
@@ -45,8 +41,6 @@ class Home extends React.Component {
           <Navigation url={page.url} />
 
           <h1>My home page</h1>
-          <p>Some content..</p>
-          <Button onClick={() => this.exampleMethod()}>Console LLog</Button>
         </Container>
       </div>
     );

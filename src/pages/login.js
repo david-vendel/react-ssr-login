@@ -31,12 +31,16 @@ class Login extends React.Component {
     super(props);
 
     this.emailRef = React.createRef();
+    this.emailRef2 = React.createRef();
     this.passRef = React.createRef();
+
     this.submitForm = this.submitForm.bind(this);
     this.loginUser = this.loginUser.bind(this);
+    this.sendEmail = this.sendEmail.bind(this);
 
     this.state = {
-      login: ""
+      login: "",
+      forgottenPassword: false
     };
   }
 
@@ -89,6 +93,22 @@ class Login extends React.Component {
       });
   }
 
+  sendEmail() {
+    event.preventDefault();
+    const body = {
+      url: "localhost:3000/reset",
+      email: this.emailRef2.current.value
+    };
+    axios
+      .post("https://test-api.inizio.cz/api/user/reset-email", body)
+      .then(response => {
+        console.log("Response", response);
+      })
+      .catch(err => {
+        console.log("err", err);
+      });
+  }
+
   render() {
     return (
       <div>
@@ -123,10 +143,44 @@ class Login extends React.Component {
             </Form.Group>
 
             <Button variant="primary" type="submit" onClick={this.submitForm}>
-              Submit
+              Log in
+            </Button>
+            <Button
+              variant="primary"
+              type="submit"
+              onClick={() => {
+                event.preventDefault();
+                this.setState({
+                  forgottenPassword: !this.state.forgottenPassword
+                });
+              }}
+            >
+              Forgot Password?
             </Button>
           </Form>
+          {this.state.login === "fail" && (
+            <div style={{ border: "1px solid red" }}>Login failed.</div>
+          )}
         </Container>
+        {this.state.forgottenPassword && (
+          <Container>
+            <Form>
+              <Form.Group controlId="formBasicEmail">
+                <Form.Label>Email address</Form.Label>
+                <Form.Control
+                  type="email"
+                  placeholder="Enter email"
+                  ref={this.emailRef2}
+                />
+                <Form.Text className="text-muted"></Form.Text>
+              </Form.Group>
+
+              <Button variant="primary" type="submit" onClick={this.sendEmail}>
+                Send email
+              </Button>
+            </Form>
+          </Container>
+        )}
       </div>
     );
   }

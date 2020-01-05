@@ -51,7 +51,6 @@ export default class Navigation extends React.Component {
 
     axios.delete("https://test-api.inizio.cz/api/user");
     document.cookie = "";
-
     window.location.href = "/";
   }
 
@@ -80,7 +79,10 @@ export default class Navigation extends React.Component {
           {this.state.email.length > 0 && (
             <React.Fragment>
               <Nav.Item>
-                <NavItem>User - {this.state.email}</NavItem>
+                <Nav.Link href="/edit-user">User - {this.state.email}</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/preferences">Preferences</Nav.Link>
               </Nav.Item>
               <Nav.Item onClick={this.logout}>
                 <Button>Logout</Button>

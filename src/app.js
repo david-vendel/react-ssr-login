@@ -23,6 +23,8 @@ import Home from "./pages/home";
 import List from "./pages/list";
 import Login from "./pages/login";
 import Register from "./pages/register";
+import EditUser from "./pages/editUser";
+import Preferences from "./pages/preferences";
 
 class App extends React.Component {
   constructor(props) {
@@ -31,7 +33,7 @@ class App extends React.Component {
       authorization: "ab"
     };
     this.knowAuth = this.knowAuth.bind(this);
-    this.loginUser = this.loginUser.bind(this);
+    // this.loginUser = this.loginUser.bind(this);
   }
 
   knowAuth(authorization) {
@@ -42,15 +44,15 @@ class App extends React.Component {
     }, 2000);
   }
 
-  loginUser(email, authorization) {
-    console.log("user logged in", email, authorization);
-    this.setState({
-      loggedInUser: {
-        email: email,
-        authorization: authorization
-      }
-    });
-  }
+  //   loginUser(email, authorization) {
+  //     console.log("user logged in", email, authorization);
+  //     this.setState({
+  //       loggedInUser: {
+  //         email: email,
+  //         authorization: authorization
+  //       }
+  //     });
+  //   }
 
   render() {
     return (
@@ -60,13 +62,18 @@ class App extends React.Component {
           path="/login"
           render={props => (
             <Login
-              loginUser={this.loginUser}
-              loggedInUser={this.state.loggedInUser}
+              //   loginUser={this.loginUser}
+              //   loggedInUser={this.state.loggedInUser}
               {...props}
             />
           )}
         />
         <Route path="/list" render={props => <List {...props} />} />
+        <Route path="/edit-user" render={props => <EditUser {...props} />} />
+        <Route
+          path="/preferences"
+          render={props => <Preferences {...props} />}
+        />
         <Route exact path="/" render={props => <Home {...props} />} />
       </Switch>
     );
