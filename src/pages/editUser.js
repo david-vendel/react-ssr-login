@@ -156,12 +156,14 @@ class EditUser extends React.Component {
         userData.billing_address[what] = event.target.value;
       }
       this.setState({
-        userData
+        userData,
+        edit: ""
       });
     } else {
       userData.shipping_address[what] = event.target.value;
       this.setState({
-        userData
+        userData,
+        edit: ""
       });
     }
   }

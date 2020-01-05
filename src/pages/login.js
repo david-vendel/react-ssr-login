@@ -40,15 +40,9 @@ class Login extends React.Component {
 
     this.state = {
       login: "",
-      forgottenPassword: false
+      forgottenPassword: false,
+      emailSent: ""
     };
-  }
-
-  exampleMethod() {
-    console.log("JS is running:", JSON.parse(document.cookie).authorization);
-  }
-  setCookie() {
-    document.cookie = "cookie set";
   }
 
   head() {
@@ -96,16 +90,18 @@ class Login extends React.Component {
   sendEmail() {
     event.preventDefault();
     const body = {
-      url: "localhost:3000/reset",
+      url: "https://inizio.cz",
       email: this.emailRef2.current.value
     };
     axios
       .post("https://test-api.inizio.cz/api/user/reset-email", body)
       .then(response => {
         console.log("Response", response);
+        this.setState({ emailSent: "success" });
       })
       .catch(err => {
         console.log("err", err);
+        this.setState({ emailSent: "fail" });
       });
   }
 
@@ -119,8 +115,6 @@ class Login extends React.Component {
 
           <h1>Login</h1>
           <p>login..</p>
-          <Button onClick={() => this.exampleMethod()}>Console LLog</Button>
-          <Button onClick={() => this.setCookie()}>Cookie set</Button>
 
           <Form>
             <Form.Group controlId="formBasicEmail">
@@ -151,7 +145,8 @@ class Login extends React.Component {
               onClick={() => {
                 event.preventDefault();
                 this.setState({
-                  forgottenPassword: !this.state.forgottenPassword
+                  forgottenPassword: !this.state.forgottenPassword,
+                  emailSent: ""
                 });
               }}
             >
@@ -178,6 +173,16 @@ class Login extends React.Component {
               <Button variant="primary" type="submit" onClick={this.sendEmail}>
                 Send email
               </Button>
+
+              {this.state.emailSent === "fail" && (
+                <div style={{ border: "1px solid red" }}>
+                  Failed to send email.
+                </div>
+              )}
+
+              {this.state.emailSent === "success" && (
+                <div style={{ border: "1px solid green" }}>Email sent.</div>
+              )}
             </Form>
           </Container>
         )}

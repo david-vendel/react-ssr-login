@@ -39,6 +39,7 @@ class Preferences extends React.Component {
 
     this.state = {
       changed: "",
+      deleted: "",
       gotData: "",
       userData: {
         password1: "",
@@ -93,8 +94,14 @@ class Preferences extends React.Component {
     if (window.confirm("Really delete?")) {
       axios
         .delete("https://test-api.inizio.cz/api/user/delete")
-        .then(response => console.log("response", response))
-        .catch(err => console.warn("err", err));
+        .then(response => {
+          console.log("response", response);
+          this.setState({ deleted: "success" });
+        })
+        .catch(err => {
+          console.warn("err", err);
+          this.setState({ deleted: "fail" });
+        });
     }
   }
 
@@ -141,8 +148,13 @@ class Preferences extends React.Component {
         console.log("response", response);
         this.saveAuthorization(response.data);
         this.setState({
-          changed: "success"
+          changed: "success",
+          userData: {
+            password1: "",
+            password2: ""
+          }
         });
+        this.passRef.current.value = "";
       })
       .catch(err => {
         console.warn("err", err.response);
@@ -192,6 +204,17 @@ class Preferences extends React.Component {
               Delete User Account
             </Button>
           </Form>
+
+          {this.state.deleted === "fail" && (
+            <div style={{ border: "1px solid red" }}>Deletion failed.</div>
+          )}
+          {this.renderErrors("registration")}
+
+          {this.state.deleted === "success" && (
+            <div style={{ border: "1px solid green" }}>
+              Deletion successful. Now what?
+            </div>
+          )}
 
           <h3>Change password</h3>
 

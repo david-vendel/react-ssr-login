@@ -55,7 +55,6 @@ export default class Navigation extends React.Component {
   }
 
   render() {
-    console.log("props", this.props);
     return (
       <div>
         <Nav variant="pills" defaultActiveKey={"/" + this.props.url}>
