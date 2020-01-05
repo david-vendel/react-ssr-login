@@ -28,7 +28,7 @@ class Home extends React.Component {
   head() {
     return (
       <Helmet>
-        <title>My page title - justDVL</title>
+        <title>{page.title}</title>
       </Helmet>
     );
   }

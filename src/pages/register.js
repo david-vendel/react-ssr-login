@@ -3,25 +3,7 @@ import { Helmet } from "react-helmet";
 import Navigation from "../components/navigation";
 import axios from "axios";
 
-import {
-  Container,
-  Row,
-  Col,
-  Navbar,
-  NavbarBrand,
-  Nav,
-  NavItem,
-  NavLink,
-  Card,
-  CardBody,
-  CardTitle,
-  CardSubtitle,
-  CardText,
-  InputGroup,
-  FormControl,
-  Button,
-  Form
-} from "react-bootstrap";
+import { Container, Button, Form } from "react-bootstrap";
 
 const page = {
   title: "Register",
@@ -43,7 +25,7 @@ class Register extends React.Component {
     this.validateFields = this.validateFields.bind(this);
 
     this.state = {
-      registration: "",
+      registered: "",
       errors: {
         email: "",
         password: "",
@@ -53,16 +35,18 @@ class Register extends React.Component {
     };
   }
 
-  exampleMethod() {
-    console.log("JS is running");
-  }
-
   head() {
     return (
       <Helmet>
-        <title>Register - justDVL</title>
+        <title>{page.title}</title>
       </Helmet>
     );
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.closeMessage !== prevProps.closeMessage) {
+      this.setState({ registered: "" });
+    }
   }
 
   validateEmail(email) {
@@ -124,11 +108,6 @@ class Register extends React.Component {
   submitForm(event) {
     event.preventDefault();
 
-    console.log("submit form", this.emailRef.current.value);
-    console.log("submit form", this.passRef.current.value);
-    console.log("submit form", this.firstNameRef.current.value);
-    console.log("submit form", this.lastNameRef.current.value);
-
     const willReturn = this.validateFields();
 
     if (willReturn) {
@@ -142,7 +121,6 @@ class Register extends React.Component {
       lastname: this.lastNameRef.current.value
     };
 
-    console.log("submitted body", body);
     this.createUser(body);
   }
 
@@ -150,8 +128,7 @@ class Register extends React.Component {
     axios
       .post("https://test-api.inizio.cz/api/user", body)
       .then(response => {
-        console.log("Response", response);
-        this.setState({ registration: "success" });
+        this.setState({ registered: "success" });
         document.cookie = JSON.stringify({
           authorization: response.data.authorization,
           email: response.data.email
@@ -165,7 +142,7 @@ class Register extends React.Component {
         );
         this.setState({
           errors,
-          registration: "fail"
+          registered: "fail"
         });
       });
   }
@@ -188,18 +165,13 @@ class Register extends React.Component {
 
           <h1>Register</h1>
           <p>Register using following form.</p>
-          {this.state.registration === "fail" && (
-            <div style={{ border: "1px solid red" }}>
-              Registration failed, try again
-            </div>
-          )}
-          {this.renderErrors("registration")}
 
-          {this.state.registration === "success" && (
-            <div style={{ border: "1px solid green" }}>
-              Registration successful. You can log in now.
-            </div>
+          {this.props.renderActionResponse(
+            this.state.registered,
+            "Registration successful. You can log in now.",
+            "Registration failed, try again"
           )}
+
           <Form>
             <Form.Group controlId="formBasicEmail">
               <Form.Label>Email address</Form.Label>

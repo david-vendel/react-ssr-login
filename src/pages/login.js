@@ -2,24 +2,11 @@ import React from "react";
 import { Helmet } from "react-helmet";
 import Navigation from "../components/navigation";
 import axios from "axios";
+import { Icon } from "react-icons-kit";
+import { circleDown } from "react-icons-kit/icomoon/circleDown";
+import { circleUp } from "react-icons-kit/icomoon/circleUp";
 
-import {
-  Container,
-  Row,
-  Col,
-  Navbar,
-  NavbarBrand,
-  Nav,
-  NavItem,
-  NavLink,
-  Card,
-  CardBody,
-  CardTitle,
-  CardSubtitle,
-  CardText,
-  Button,
-  Form
-} from "react-bootstrap";
+import { Container, Button, Form } from "react-bootstrap";
 
 const page = {
   title: "Login",
@@ -53,18 +40,20 @@ class Login extends React.Component {
     );
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.closeMessage !== prevProps.closeMessage) {
+      this.setState({ emailSent: "" });
+    }
+  }
+
   submitForm(event) {
     event.preventDefault();
-
-    console.log("submit form", this.emailRef.current.value);
-    console.log("submit form", this.passRef.current.value);
 
     const body = {
       email: this.emailRef.current.value,
       password: this.passRef.current.value
     };
 
-    console.log("submitted body", body);
     this.loginUser(body);
   }
 
@@ -72,7 +61,6 @@ class Login extends React.Component {
     axios
       .post("https://test-api.inizio.cz/api/user/login", body)
       .then(response => {
-        console.log("Response", response);
         this.setState({ login: "success" });
         // this.props.loginUser(response.data.email, response.data.authorization);
         document.cookie = JSON.stringify({
@@ -96,7 +84,6 @@ class Login extends React.Component {
     axios
       .post("https://test-api.inizio.cz/api/user/reset-email", body)
       .then(response => {
-        console.log("Response", response);
         this.setState({ emailSent: "success" });
       })
       .catch(err => {
@@ -136,20 +123,31 @@ class Login extends React.Component {
               />
             </Form.Group>
 
-            <Button variant="primary" type="submit" onClick={this.submitForm}>
+            <Button
+              variant="primary"
+              type="submit"
+              onClick={this.submitForm}
+              style={{ marginRight: 5 }}
+            >
               Log in
             </Button>
             <Button
-              variant="primary"
+              variant="secondary"
               type="submit"
               onClick={() => {
                 event.preventDefault();
                 this.setState({
                   forgottenPassword: !this.state.forgottenPassword,
-                  emailSent: ""
+                  emailSent: "",
+                  login: ""
                 });
               }}
             >
+              {this.state.forgottenPassword ? (
+                <Icon icon={circleUp} style={{ marginRight: 5 }} />
+              ) : (
+                <Icon icon={circleDown} style={{ marginRight: 5 }} />
+              )}
               Forgot Password?
             </Button>
           </Form>
@@ -174,14 +172,10 @@ class Login extends React.Component {
                 Send email
               </Button>
 
-              {this.state.emailSent === "fail" && (
-                <div style={{ border: "1px solid red" }}>
-                  Failed to send email.
-                </div>
-              )}
-
-              {this.state.emailSent === "success" && (
-                <div style={{ border: "1px solid green" }}>Email sent.</div>
+              {this.props.renderActionResponse(
+                this.state.emailSent,
+                "Email sent.",
+                "Failed to send email."
               )}
             </Form>
           </Container>

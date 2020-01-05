@@ -38,7 +38,7 @@ class Preferences extends React.Component {
     this.passRef = React.createRef();
 
     this.state = {
-      changed: "",
+      changed: "", //tell us whether password change was success or fail, to be able to display info message
       deleted: "",
       gotData: "",
       userData: {
@@ -60,13 +60,18 @@ class Preferences extends React.Component {
     );
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.closeMessage !== prevProps.closeMessage) {
+      this.setState({ changed: "" });
+    }
+  }
+
   setToken() {
     let token = "";
     if (document && document.cookie) {
       token = JSON.parse(document.cookie).authorization;
     }
 
-    console.log("token", token);
     axios.defaults.headers.common = { Authorization: `bearer ${token}` };
   }
 
@@ -95,7 +100,6 @@ class Preferences extends React.Component {
       axios
         .delete("https://test-api.inizio.cz/api/user/delete")
         .then(response => {
-          console.log("response", response);
           this.setState({ deleted: "success" });
         })
         .catch(err => {
@@ -112,7 +116,8 @@ class Preferences extends React.Component {
     let willReturn = false;
 
     this.setState({
-      errors: { change: "" }
+      errors: { change: "" },
+      errorMessages: []
     });
 
     if (this.state.userData.password1 !== this.state.userData.password2) {
@@ -145,7 +150,6 @@ class Preferences extends React.Component {
     axios
       .post("https://test-api.inizio.cz/api/user/new-password", body)
       .then(response => {
-        console.log("response", response);
         this.saveAuthorization(response.data);
         this.setState({
           changed: "success",
@@ -208,7 +212,6 @@ class Preferences extends React.Component {
           {this.state.deleted === "fail" && (
             <div style={{ border: "1px solid red" }}>Deletion failed.</div>
           )}
-          {this.renderErrors("registration")}
 
           {this.state.deleted === "success" && (
             <div style={{ border: "1px solid green" }}>
@@ -216,19 +219,12 @@ class Preferences extends React.Component {
             </div>
           )}
 
-          <h3>Change password</h3>
+          <h3>Change password - {this.state.changed}</h3>
 
-          {this.state.changed === "fail" && (
-            <div style={{ border: "1px solid red" }}>
-              Password change failed.
-            </div>
-          )}
-          {this.renderErrors("registration")}
-
-          {this.state.changed === "success" && (
-            <div style={{ border: "1px solid green" }}>
-              Password change was successful.
-            </div>
+          {this.props.renderActionResponse(
+            this.state.changed,
+            "Password change was successful.",
+            "Password change failed."
           )}
 
           {this.renderErrors("change")}

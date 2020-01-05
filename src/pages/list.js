@@ -6,20 +6,9 @@ import axios from "axios";
 import {
   Container,
   Row,
-  Col,
   DropdownButton,
   Dropdown,
-  Navbar,
-  NavbarBrand,
-  Nav,
-  NavItem,
-  NavLink,
   Card,
-  CardBody,
-  CardImg,
-  CardTitle,
-  CardSubtitle,
-  CardText,
   Button,
   ListGroup,
   ListGroupItem,
@@ -30,7 +19,7 @@ import {
 
 const page = {
   title: "List",
-  url: "list"
+  url: ""
 };
 
 const sortNames = {
@@ -66,7 +55,6 @@ class List extends React.Component {
     );
   }
   componentDidMount() {
-    console.log("cdm");
     window.addEventListener("resize", _.throttle(this.reportWindowSize, 500));
     this.reportWindowSize();
     this.fetchProducts();
@@ -86,7 +74,6 @@ class List extends React.Component {
     axios
       .get("https://test-api.inizio.cz/api/products", { params: params })
       .then(response => {
-        console.log("response", response);
         if (response && response.data) {
           this.setState({
             products: response.data.products,
@@ -107,7 +94,6 @@ class List extends React.Component {
 
   filterPrice() {
     event.preventDefault();
-    console.log("filter price", this.state.value.min, this.state.value.max);
     const params = {
       price_from: this.state.value.min,
       price_to: this.state.value.max,
@@ -276,7 +262,6 @@ class List extends React.Component {
           <Row style={{ width: "100%", marginLeft: 0, marginRight: 0 }}>
             {Object.keys(this.state.products).map(key => {
               const product = this.state.products[key];
-              //   console.log("product", product);
               return (
                 <Card
                   style={{
@@ -306,8 +291,8 @@ class List extends React.Component {
                     </ListGroupItem>
                   </ListGroup>
                   <Card.Body>
-                    <Card.Link href="">Detail</Card.Link>
-                    <Card.Link href="">Add to cart</Card.Link>
+                    <Card.Link href="#">Detail</Card.Link>
+                    <Card.Link href="#">Add to cart</Card.Link>
                   </Card.Body>
                 </Card>
               );

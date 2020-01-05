@@ -4,6 +4,10 @@ import Navigation from "../components/navigation";
 import axios from "axios";
 import _ from "lodash";
 
+import { Icon } from "react-icons-kit";
+import { arrowUp } from "react-icons-kit/icomoon/arrowUp";
+import { arrowDown } from "react-icons-kit/icomoon/arrowDown";
+
 import {
   Container,
   Row,
@@ -30,13 +34,6 @@ const page = {
 class EditUser extends React.Component {
   constructor(props) {
     super(props);
-
-    // this.nameRef = React.createRef();
-    // this.lastNameRef = React.createRef();
-    // this.streetRef = React.createRef();
-    // this.cityRef = React.createRef();
-    // this.countryRef = React.createRef();
-    // this.zipRef = React.createRef();
 
     this.submitForm = this.submitForm.bind(this);
     this.editUser = this.editUser.bind(this);
@@ -70,13 +67,17 @@ class EditUser extends React.Component {
     this.getUserData();
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.closeMessage !== prevProps.closeMessage) {
+      this.setState({ edit: "" });
+    }
+  }
+
   setToken() {
     let token = "";
     if (document && document.cookie) {
       token = JSON.parse(document.cookie).authorization;
     }
-
-    console.log("token", token);
     axios.defaults.headers.common = { Authorization: `bearer ${token}` };
   }
 
@@ -95,7 +96,6 @@ class EditUser extends React.Component {
       billing_address: this.state.userData.billing_address
     };
 
-    console.log("submitted body", body);
     this.editUser(body);
   }
 
@@ -105,7 +105,6 @@ class EditUser extends React.Component {
     axios
       .put("https://test-api.inizio.cz/api/user", body)
       .then(response => {
-        console.log("Response", response);
         this.saveAuthorization(response.data);
         this.setState({ edit: "success" });
       })
@@ -116,15 +115,11 @@ class EditUser extends React.Component {
   }
 
   getUserData() {
-    console.log("getUserData");
     this.setToken();
-
-    console.log("getUserData");
     try {
       axios
         .get("https://test-api.inizio.cz/api/user")
         .then(response => {
-          console.log("getUserData response", response);
           this.saveAuthorization(response.data);
           const userData = {
             shipping_address: response.data.shipping_address,
@@ -149,7 +144,6 @@ class EditUser extends React.Component {
   changeInput(event, what, billing) {
     let userData = this.state.userData;
     if (billing) {
-      console.log("event.target.value", event.target.value);
       if (Array.isArray(what)) {
         userData.billing_address[what[0]][what[1]] = event.target.value;
       } else {
@@ -170,23 +164,19 @@ class EditUser extends React.Component {
 
   copyShippingToBilling() {
     let userData = this.state.userData;
-    console.log("userData", userData);
 
     const company = userData.billing_address.company;
     userData.billing_address = _.cloneDeep(userData.shipping_address);
     userData.billing_address.company = _.cloneDeep(company);
-    console.log("userData", userData);
 
     this.setState({ userData });
   }
 
   copyBillingToShipping() {
     let userData = this.state.userData;
-    console.log("userData", userData);
 
     userData.shipping_address = _.cloneDeep(userData.billing_address);
     delete userData.shipping_address.company;
-    console.log("userData", userData);
 
     this.setState({ userData });
   }
@@ -274,11 +264,17 @@ class EditUser extends React.Component {
               <Form.Text className="text-muted"></Form.Text>
             </Form.Group>
 
-            <Button onClick={this.copyShippingToBilling}>
+            <Button
+              onClick={this.copyShippingToBilling}
+              style={{ marginRight: 10 }}
+            >
               Copy shipping data to billing data
+              <Icon style={{ marginLeft: 5 }} icon={arrowDown} />
             </Button>
+
             <Button onClick={this.copyBillingToShipping}>
               Copy billing data to shipping data
+              <Icon style={{ marginLeft: 5 }} icon={arrowUp} />
             </Button>
 
             <h2>Billing address</h2>
@@ -390,17 +386,12 @@ class EditUser extends React.Component {
               <Form.Text className="text-muted"></Form.Text>
             </Form.Group>
 
-            {this.state.edit === "success" && (
-              <div style={{ border: "1px solid green" }}>
-                Data saved successfully.
-              </div>
+            {this.props.renderActionResponse(
+              this.state.edit,
+              "Data saved successfully.",
+              "Problem with saving data."
             )}
 
-            {this.state.edit === "fail" && (
-              <div style={{ border: "1px solid red" }}>
-                Problem with saving data.
-              </div>
-            )}
             <Button variant="primary" type="submit" onClick={this.submitForm}>
               Submit
             </Button>

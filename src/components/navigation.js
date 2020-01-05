@@ -1,22 +1,7 @@
 import React from "react";
 import axios from "axios";
 
-import {
-  Container,
-  Row,
-  Col,
-  Navbar,
-  NavbarBrand,
-  Nav,
-  NavItem,
-  NavLink,
-  Card,
-  CardBody,
-  CardTitle,
-  CardSubtitle,
-  CardText,
-  Button
-} from "react-bootstrap";
+import { Nav, Button } from "react-bootstrap";
 
 export default class Navigation extends React.Component {
   constructor(props) {
@@ -29,7 +14,6 @@ export default class Navigation extends React.Component {
   }
 
   componentDidMount() {
-    console.log("my cookies:", document.cookie);
     if (
       document &&
       document.cookie &&
@@ -46,7 +30,6 @@ export default class Navigation extends React.Component {
   logout() {
     const token = this.state.authorization;
 
-    console.log("logout", token);
     axios.defaults.headers.common = { Authorization: `bearer ${token}` };
 
     axios.delete("https://test-api.inizio.cz/api/user");
@@ -59,11 +42,9 @@ export default class Navigation extends React.Component {
       <div>
         <Nav variant="pills" defaultActiveKey={"/" + this.props.url}>
           <Nav.Item>
-            <Nav.Link href="/">Active</Nav.Link>
+            <Nav.Link href="/">Home</Nav.Link>
           </Nav.Item>
-          <Nav.Item>
-            <Nav.Link href="/list">List</Nav.Link>
-          </Nav.Item>
+
           {this.state.email.length === 0 && (
             <React.Fragment>
               <Nav.Item>
