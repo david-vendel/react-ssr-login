@@ -31,6 +31,7 @@ class App extends React.Component {
       authorization: "ab"
     };
     this.knowAuth = this.knowAuth.bind(this);
+    this.loginUser = this.loginUser.bind(this);
   }
 
   knowAuth(authorization) {
@@ -41,11 +42,30 @@ class App extends React.Component {
     }, 2000);
   }
 
+  loginUser(email, authorization) {
+    console.log("user logged in", email, authorization);
+    this.setState({
+      loggedInUser: {
+        email: email,
+        authorization: authorization
+      }
+    });
+  }
+
   render() {
     return (
       <Switch>
         <Route path="/register" render={props => <Register {...props} />} />
-        <Route path="/login" render={props => <Login {...props} />} />
+        <Route
+          path="/login"
+          render={props => (
+            <Login
+              loginUser={this.loginUser}
+              loggedInUser={this.state.loggedInUser}
+              {...props}
+            />
+          )}
+        />
         <Route path="/list" render={props => <List {...props} />} />
         <Route exact path="/" render={props => <Home {...props} />} />
       </Switch>

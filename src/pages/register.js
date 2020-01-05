@@ -38,6 +38,10 @@ class Register extends React.Component {
     this.surNameRef = React.createRef();
     this.submitForm = this.submitForm.bind(this);
     this.createUser = this.createUser.bind(this);
+
+    this.state = {
+      registration: ""
+    };
   }
 
   exampleMethod() {
@@ -67,7 +71,7 @@ class Register extends React.Component {
       lastname: this.surNameRef.current.value
     };
 
-    console.log("body", body);
+    console.log("submitted body", body);
     this.createUser(body);
   }
 
@@ -76,14 +80,15 @@ class Register extends React.Component {
       .post("https://test-api.inizio.cz/api/user", body)
       .then(response => {
         console.log("Response", response);
-
+        this.setState({ registration: "success" });
         document.cookie = JSON.stringify({
           authorization: response.data.authorization
         });
-
-        //this.props.knowAuth(response.data.authorization);
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log("err", err);
+        this.setState({ registration: "fail" });
+      });
   }
 
   render() {
@@ -95,7 +100,16 @@ class Register extends React.Component {
 
           <h1>Register</h1>
           <p>Register using following form.</p>
-
+          {this.state.registration === "fail" && (
+            <div style={{ border: "1px solid red" }}>
+              Registration failed, try again
+            </div>
+          )}
+          {this.state.registration === "success" && (
+            <div style={{ border: "1px solid green" }}>
+              Registration successful.
+            </div>
+          )}
           <Form>
             <Form.Group controlId="formBasicEmail">
               <Form.Label>Email address</Form.Label>
